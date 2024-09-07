@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\LoginData;
 use App\Data\RegisterData;
+use App\Events\UserRegistered;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,16 +20,19 @@ class AuthService
 
     public function register(RegisterData $reqData)
     {
-        // Hash the password and save the user
+        // hash the password and save the user
         $user = $this->userRepository->create([
             'name' => $reqData->name,
             'email' => $reqData->email,
             'password' => Hash::make($reqData->password),
         ]);
 
-        // Generate API token
+        // generate api token
         $token = $user->createToken('api-token')->plainTextToken;
         $user->setAttribute('token', $token);
+
+        // call event to send mail
+        event(new UserRegistered($user));
 
         return $user;
     }

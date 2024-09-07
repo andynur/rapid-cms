@@ -10,6 +10,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.2",
+        "resend/resend-laravel": "^0.14.0",
         "spatie/laravel-data": "^4.8"
     },
     "require-dev": {
