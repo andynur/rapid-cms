@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\Services\AuthServiceInterface;
+use App\Services\PostServiceInterface;
+use App\Services\UserServiceInterface;
+use App\Repositories\CommentRepository;
+use App\Repositories\CommentRepositoryInterface;
+use App\Repositories\PostRepository;
+use App\Repositories\PostRepositoryInterface;
+use App\Repositories\UserRepository;
+use App\Repositories\UserRepositoryInterface;
+use App\Services\AuthService;
+use App\Services\PostService;
+use App\Services\UserService;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -18,7 +30,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Bind services interfaces to implementations
+        $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(PostServiceInterface::class, PostService::class);
+
+        // Bind repository interfaces to implementations
+        $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
+        $this->app->bind(CommentRepositoryInterface::class, CommentRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
     /**

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuthServiceInterface;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
-use App\Services\AuthService;
 use App\Helpers\JsonResponse;
 use App\Http\Resources\AuthResource;
+use App\Services\AuthService;
 
 class AuthController extends Controller
 {
     protected $authService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(AuthServiceInterface $authService)
     {
         $this->authService = $authService;
     }

@@ -5,15 +5,15 @@ namespace App\Services;
 use App\Data\LoginData;
 use App\Data\RegisterData;
 use App\Events\UserRegistered;
-use App\Repositories\UserRepository;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
-    protected UserRepository $userRepository;
+    protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }

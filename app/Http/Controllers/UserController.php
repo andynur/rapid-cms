@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\UserService;
+use App\Services\UserServiceInterface;
 use App\Helpers\JsonResponse;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     protected $userService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
     }

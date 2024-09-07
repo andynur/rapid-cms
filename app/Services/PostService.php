@@ -4,15 +4,15 @@ namespace App\Services;
 
 use App\Data\CommentData;
 use App\Data\PostData;
-use App\Repositories\CommentRepository;
-use App\Repositories\PostRepository;
+use App\Repositories\CommentRepositoryInterface;
+use App\Repositories\PostRepositoryInterface;
 
-class PostService
+class PostService implements PostServiceInterface
 {
-    protected PostRepository $postRepository;
-    protected CommentRepository $commentRepository;
+    protected $postRepository;
+    protected $commentRepository;
 
-    public function __construct(PostRepository $postRepository, CommentRepository $commentRepository)
+    public function __construct(PostRepositoryInterface $postRepository, CommentRepositoryInterface $commentRepository)
     {
         $this->postRepository = $postRepository;
         $this->commentRepository = $commentRepository;

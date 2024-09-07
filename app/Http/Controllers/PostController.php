@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PostServiceInterface;
 use App\Data\PostData;
 use App\Http\Requests\PostRequest;
-use App\Services\PostService;
 use App\Helpers\JsonResponse;
 use App\Helpers\PaginationHelper;
 use App\Http\Requests\CommentRequest;
@@ -19,7 +19,7 @@ class PostController extends Controller
 {
     protected $postService;
 
-    public function __construct(PostService $postService)
+    public function __construct(PostServiceInterface $postService)
     {
         $this->postService = $postService;
     }
