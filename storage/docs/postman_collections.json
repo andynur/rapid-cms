@@ -1,0 +1,249 @@
+{
+    "info": {
+      "name": "JuiceBox Laravel API",
+      "_postman_id": "example-id",
+      "description": "API for JuiceBox Laravel Developer Code Test",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "User Registration",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/register",
+            "host": ["{{base_url}}"],
+            "path": ["api", "register"]
+          }
+        },
+        "response": [
+          {
+            "name": "Successful Registration",
+            "originalRequest": {},
+            "status": "201 Created",
+            "code": 201,
+            "body": "{\"status\": 201, \"message\": \"User registered successfully\", \"data\": {\"token\": \"{auth_token}\"}}"
+          },
+          {
+            "name": "Validation Error",
+            "originalRequest": {},
+            "status": "422 Unprocessable Entity",
+            "code": 422,
+            "body": "{\"status\": 422, \"message\": \"Validation Error\", \"errors\": {\"email\": [\"The email has already been taken.\"], \"password\": [\"The password confirmation does not match.\"]}}"
+          }
+        ]
+      },
+      {
+        "name": "User Login",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/login",
+            "host": ["{{base_url}}"],
+            "path": ["api", "login"]
+          }
+        },
+        "response": [
+          {
+            "name": "Successful Login",
+            "originalRequest": {},
+            "status": "200 OK",
+            "code": 200,
+            "body": "{\"status\": 200, \"message\": \"Login successful\", \"data\": {\"token\": \"{auth_token}\"}}"
+          },
+          {
+            "name": "Login Failed",
+            "originalRequest": {},
+            "status": "401 Unauthorized",
+            "code": 401,
+            "body": "{\"status\": 401, \"message\": \"Invalid credentials.\", \"errors\": null}"
+          }
+        ]
+      },
+      {
+        "name": "User Logout",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{auth_token}}",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "{{base_url}}/api/logout",
+            "host": ["{{base_url}}"],
+            "path": ["api", "logout"]
+          }
+        },
+        "response": [
+          {
+            "name": "Successful Logout",
+            "originalRequest": {},
+            "status": "200 OK",
+            "code": 200,
+            "body": "{\"status\": 200, \"message\": \"Successfully logged out\", \"data\": null}"
+          },
+          {
+            "name": "Unauthorized",
+            "originalRequest": {},
+            "status": "401 Unauthorized",
+            "code": 401,
+            "body": "{\"status\": 401, \"message\": \"Unauthenticated.\", \"errors\": null}"
+          }
+        ]
+      },
+      {
+        "name": "Get All Posts",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{base_url}}/api/posts",
+            "host": ["{{base_url}}"],
+            "path": ["api", "posts"]
+          }
+        },
+        "response": [
+          {
+            "name": "Successful Fetch",
+            "originalRequest": {},
+            "status": "200 OK",
+            "code": 200,
+            "body": "{\"status\": 200, \"message\": \"Posts retrieved successfully\", \"data\": [{\"id\": 1, \"title\": \"Post Title\", \"body\": \"Post Body\", \"author\": \"Author Name\"}]}"
+          }
+        ]
+      },
+      {
+        "name": "Create Post",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{auth_token}}",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"title\": \"New Post\",\n    \"body\": \"Post body content\",\n    \"author_id\": 1\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/posts",
+            "host": ["{{base_url}}"],
+            "path": ["api", "posts"]
+          }
+        },
+        "response": [
+          {
+            "name": "Post Created",
+            "originalRequest": {},
+            "status": "201 Created",
+            "code": 201,
+            "body": "{\"status\": 201, \"message\": \"Post created successfully\", \"data\": {\"id\": 1, \"title\": \"New Post\"}}"
+          },
+          {
+            "name": "Validation Error",
+            "originalRequest": {},
+            "status": "422 Unprocessable Entity",
+            "code": 422,
+            "body": "{\"status\": 422, \"message\": \"Validation Error\", \"errors\": {\"title\": [\"The title field is required.\"], \"body\": [\"The body field is required.\"]}}"
+          }
+        ]
+      },
+      {
+        "name": "Update Post",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{auth_token}}",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"title\": \"Updated Post Title\",\n    \"body\": \"Updated post body content\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/posts/1",
+            "host": ["{{base_url}}"],
+            "path": ["api", "posts", "1"]
+          }
+        },
+        "response": [
+          {
+            "name": "Post Updated",
+            "originalRequest": {},
+            "status": "200 OK",
+            "code": 200,
+            "body": "{\"status\": 200, \"message\": \"Post updated successfully\", \"data\": {\"id\": 1, \"title\": \"Updated Post Title\"}}"
+          },
+          {
+            "name": "Unauthorized",
+            "originalRequest": {},
+            "status": "401 Unauthorized",
+            "code": 401,
+            "body": "{\"status\": 401, \"message\": \"Unauthenticated.\", \"errors\": null}"
+          }
+        ]
+      },
+      {
+        "name": "Delete Post",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{auth_token}}",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "{{base_url}}/api/posts/1",
+            "host": ["{{base_url}}"],
+            "path": ["api", "posts", "1"]
+          }
+        },
+        "response": [
+          {
+            "name": "Post Deleted",
+            "originalRequest": {},
+            "status": "200 OK",
+            "code": 200,
+            "body": "{\"status\": 200, \"message\": \"Post deleted successfully\", \"data\": null}"
+          },
+          {
+            "name": "Unauthorized",
+            "originalRequest": {},
+            "status": "401 Unauthorized",
+            "code": 401,
+            "body": "{\"status\": 401, \"message\": \"Unauthenticated.\", \"errors\": null}"
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8000"
+      },
+      {
+        "key": "auth_token",
+        "value": ""
+      }
+    ]
+  }
