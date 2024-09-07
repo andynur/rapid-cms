@@ -9,4 +9,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'post_id',
+        'name',
+        'email',
+        'comment',
+    ];
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }
