@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');;
 
     // get a specific user by id
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
     // post routes with api resources
     Route::apiResource('posts', PostController::class);

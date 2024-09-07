@@ -24,7 +24,7 @@ class PostRequest extends FormRequest
     {
         return [
             'title'           => 'required|string|max:255',
-            'slug'            => 'nullable|string|unique:posts,slug,' . $this->post->id,
+            'slug'            => 'nullable|string|unique:posts,slug,' . ($this->post->id ?? 0),
             'main_image'      => 'nullable|string',
             'categories'      => 'nullable|string',
             'published_at'    => 'nullable|date',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\UserService;
 use App\Helpers\JsonResponse;
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -16,8 +16,16 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function show(User $user)
+    public function show(int $id)
     {
+        // Cache key for user detail
+        $cacheKey = 'user_' . $id;
+
+        // Try to get user from cache
+        $user = Cache::remember($cacheKey, 60 * 60, function () use ($id) {
+            return $this->userService->findUserById($id);
+        });
+
         return JsonResponse::success(new UserResource($user), 'User retrieved successfully');
     }
 }

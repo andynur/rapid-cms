@@ -16,9 +16,9 @@ class BaseRepository
     public function all(
         int $page = 1,
         int $perPage = 10,
-        string|null $searchBy = null,
-        string|null $keyword = null,
-        string|null $sortBy = null,
+        ?string $searchBy = null,
+        ?string $keyword = null,
+        ?string $sortBy = null,
         string $sortDirection = 'asc',
         array $fields = ['*']
     ) {

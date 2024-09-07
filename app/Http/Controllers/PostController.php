@@ -13,6 +13,7 @@ use App\Http\Resources\PostDetailResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -32,7 +33,14 @@ class PostController extends Controller
         $sortBy     = $request->query('sort_by', 'id');
         $sortOrder  = $request->query('sort_order', 'asc');
 
-        $posts = $this->postService->getAllPosts($page, $perPage, $searchBy, $keyword, $sortBy, $sortOrder);
+        // Build a dynamic cache key based on query params
+        $cacheKey = 'posts_list_' . md5("page=$page&per_page=$perPage&search_by=$searchBy&keyword=$keyword&sort_by=$sortBy&sort_order=$sortOrder");
+
+        // Try to get data from cache using tags
+        $posts = Cache::tags(['posts'])->remember($cacheKey, 60 * 60, function () use ($page, $perPage, $searchBy, $keyword, $sortBy, $sortOrder) {
+            return $this->postService->getAllPosts($page, $perPage, $searchBy, $keyword, $sortBy, $sortOrder);
+        });
+
         $meta = PaginationHelper::meta($posts);
 
         return JsonResponse::success(PostResource::collection($posts)->collection, 'Posts retrieved successfully', $meta);
@@ -40,7 +48,14 @@ class PostController extends Controller
 
     public function show(int $id)
     {
-        $post = $this->postService->getPostDetailById($id);
+        // Cache key for post detail
+        $cacheKey = 'post_' . $id;
+
+        // Try to get post from cache
+        $post = Cache::remember($cacheKey, 60 * 60, function () use ($id) {
+            return $this->postService->getPostDetailById($id);
+        });
+
         if (!$post) {
             return JsonResponse::notFound('Post not found');
         }
@@ -53,6 +68,9 @@ class PostController extends Controller
         $postData = $request->toData();
         $postData->user_id = $request->user()->id;
         $post = $this->postService->createPost($postData);
+
+        // Clear all post list caches since data has changed
+        $this->clearPostCache();
 
         return JsonResponse::created(new PostResource($post), 'Post created successfully');
     }
@@ -67,12 +85,18 @@ class PostController extends Controller
             return JsonResponse::notFound('Post not found');
         }
 
+        // Clear all post list caches since data has changed
+        $this->clearPostCache($post->id);
+
         return JsonResponse::success(new PostResource($postUpdate), 'Post updated successfully');
     }
 
     public function destroy(Post $post)
     {
         $this->postService->deletePost($post->id);
+
+        // Clear all post list caches since data has changed
+        $this->clearPostCache($post->id);
 
         return JsonResponse::success(null, 'Post deleted successfully');
     }
@@ -84,5 +108,13 @@ class PostController extends Controller
         $comment = $this->postService->addCommentToPost($commentData);
 
         return JsonResponse::created(new CommentResource($comment), 'Comment created successfully');
+    }
+
+    protected function clearPostCache(?int $id = null)
+    {
+        Cache::tags(['posts'])->flush();
+        if ($id !== null) {
+            Cache::forget("post_{$id}");
+        }
     }
 }
