@@ -5,6 +5,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,5 +36,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (InternalErrorException $e) {
             return JsonResponse::error('Something went wrong', $e->getMessage(), 500);
+        });
+
+        $exceptions->render(function (ThrottleRequestsException $e) {
+            return JsonResponse::error('Too Many Requests', $e->getMessage(), 429);
         });
     })->create();
